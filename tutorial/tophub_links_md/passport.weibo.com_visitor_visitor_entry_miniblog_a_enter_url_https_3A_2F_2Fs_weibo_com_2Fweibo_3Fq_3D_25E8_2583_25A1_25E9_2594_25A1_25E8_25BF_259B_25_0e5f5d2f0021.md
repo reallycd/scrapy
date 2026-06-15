@@ -1,0 +1,63 @@
+# Sina Visitor System
+
+- 原始链接: https://passport.weibo.com/visitor/visitor?entry=miniblog&a=enter&url=https%3A%2F%2Fs.weibo.com%2Fweibo%3Fq%3D%25E8%2583%25A1%25E9%2594%25A1%25E8%25BF%259B%25E5%258A%259D%25E8%2581%2594%25E5%2590%2588%25E6%2597%25A9%25E6%258A%25A5%25E5%2588%25AB%25E5%25A4%25AA%25E6%2595%258F%25E6%2584%259F&domain=.weibo.com&sudaref=&ua=php-sso_sdk_client-0.6.29&_rand=1781466988.2229
+- 来源页面: https://tophub.today/
+- 状态码: 200
+
+## 抽取文本预览
+
+window.use_fp = "1" == "1"; // 是否采集设备指纹。
+    var url = url || {};
+    (function () {
+        this.l = function (u, c) {
+            try {
+                var s = document.createElement("script");
+                s.type = "text/javascript";
+                s[document.all ? "onreadystatechange" : "onload"] = function () {
+                    if (document.all && this.readyState != "loaded" && this.readyState != "complete") {
+                        return
+                    }
+                    this[document.all ? "onreadystatechange" : "onload"] = null;
+                    this.parentNode.removeChild(this);
+                    if (c) {
+                        c()
+                    }
+                };
+                s.src = u;
+                document.getElementsByTagName("head")[0].appendChild(s)
+            } catch (e) {
+            }
+        };
+    }).call(url);
+
+    var visitor_origin = function () {
+        try {
+            var need_restore = "1" == "1"; // 是否走恢复身份流程。
+
+            // 如果需要走恢复身份流程，尝试从 cookie 获取用户身份。
+            if (!need_restore || !Store.CookieHelper.get("SRF")) {
+
+                // 若获取失败走创建访客流程。
+                // 流程执行时间过长（超过 3s），则认为出错。
+                var error_timeout = window.setTimeout("error_back()", 5000);
+
+                tid.get(function (tid, where, confidence) {
+                    // 取指纹顺利完成，清除出错 timeout 。
+                    window.clearTimeout(error_timeout);
+                    incarnate(tid, where, confidence);
+                });
+            } else {
+                // 用户身份存在，尝试恢复用户身份。
+                restore();
+            }
+        } catch (e) {
+            // 出错。
+            error_back();
+        }
+    };
+
+    var visitor_gray = function () {
+        var from = "weibo";
+        var return_url = "https://s.weibo.com/weibo?q=%E8%83%A1%E9%94%A1%E8%BF%9B%E5%8A%9D%E8%81%94%E5%90%88%E6%97%A9%E6%8A%A5%E5%88%AB%E5%A4%AA%E6%95%8F%E6%84%9F";
+        var request_id = "f5595ad9672078aa554fbcdcc30f71a2";
+        var webdriver = navig
